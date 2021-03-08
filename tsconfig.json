@@ -10,6 +10,5 @@
             "es2015"
         ],
         "jsx": "react-jsx",
-        "noFallthroughCasesInSwitch": true,
     }
 }
