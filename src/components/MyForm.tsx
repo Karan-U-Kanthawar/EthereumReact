@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { Container, Button, Row, Col } from "react-bootstrap";
 import Form from "react-bootstrap/esm/Form";
+import InputGroupWithExtras from "react-bootstrap/esm/InputGroup";
 
 declare type FormControlElement =
   | HTMLInputElement
@@ -17,8 +18,8 @@ export const MyForm: FC<MyFormProps> = ({ myAccount }): ReactElement => {
   const [toAddress, setToAddress] = useState("");
   const [amount, setAmount] = useState(0);
   const [balance, setBalance] = useState(0);
-  const [gas, setGas] = useState(0);
-  const [gasPrice, setGasPrice] = useState(0);
+  // const [gas, setGas] = useState(0);
+  // const [gasPrice, setGasPrice] = useState(0);
 
   let account = myAccount;
 
@@ -65,16 +66,16 @@ export const MyForm: FC<MyFormProps> = ({ myAccount }): ReactElement => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     console.log("To address: ", toAddress);
     console.log("Amount: ", amount);
-    console.log("Gas: ", gas);
-    console.log("Gas price: ", gasPrice);
+    // console.log("Gas: ", gas);
+    // console.log("Gas price: ", gasPrice);
 
     const deployMetamaskTxn = async () => {
       const transactionParameters = {
-        gasPrice: `${gasPrice}`,
-        gas: `${gas}`,
+        // gasPrice: `${gasPrice}`,
+        // gas: `${gas}`,
         to: `${toAddress}`,
         from: window.ethereum.selectedAddress,
-        value: web3.utils.toWei(`${amount}`, "ether")
+        value: web3.utils.toWei(`0.1`)
       };
 
       try {
@@ -83,6 +84,7 @@ export const MyForm: FC<MyFormProps> = ({ myAccount }): ReactElement => {
           params: [transactionParameters]
         });
         console.log(txHash);
+        alert(txHash);
       } catch (error) {
         console.log(error);
       }
@@ -104,52 +106,41 @@ export const MyForm: FC<MyFormProps> = ({ myAccount }): ReactElement => {
       </Row>
       <Row>
         <Col>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formToAddress">
-              <Form.Label>To Address</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Send to"
-                onChange={handleToAddressChange}
-                value={toAddress}
-              />
-            </Form.Group>
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center"
+              // alignItems: "center"
+            }}
+          >
+            <label style={{ margin: "5px 5px 0 5px" }}>Address</label>
+            <input
+              id="address"
+              type="text"
+              placeholder="Send to"
+              value={toAddress}
+              onChange={handleToAddressChange}
+            />
+            <label style={{ margin: "5px 5px 0 5px" }}>Amount</label>
+            <input
+              id="amount"
+              type="number"
+              placeholder="Amount to send"
+              step="0.1"
+              value={amount}
+              onChange={handleAmountChange}
+            />
 
-            <Form.Group controlId="formAmount">
-              <Form.Label>Amount</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Ether to send"
-                onChange={handleAmountChange}
-                value={amount}
-                step="0.1"
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formGas">
-              <Form.Label>Gas</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Gas"
-                onChange={handleGasChange}
-                value={gas}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formGasPrice">
-              <Form.Label>Gas Price</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Gas Price"
-                onChange={handleGasPriceChange}
-                value={gasPrice}
-              />
-            </Form.Group>
-
-            <Button variant="primary" type="submit">
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ marginTop: "5px" }}
+            >
               Submit
             </Button>
-          </Form>
+          </form>
         </Col>
       </Row>
     </Container>
